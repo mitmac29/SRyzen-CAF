@@ -11,20 +11,15 @@ jobs:
             bash build-start.sh stable clang
             cd kernel
             wget https://raw.githubusercontent.com/TianWalkzzMiku/SRyzen-CAF/caf/build-dtb.sh
-            bash build-dtb.sh a26x clang qpnp
             bash build-dtb.sh lavender clang qpnp
             bash build-dtb.sh tulip clang qpnp
             bash build-dtb.sh whyred clang qpnp
             git apply qti.patch
-            bash build-dtb.sh a26x clang qti
             bash build-dtb.sh lavender clang qti
             bash build-dtb.sh tulip clang qti
             bash build-dtb.sh whyred clang qti
             git restore .
             wget https://raw.githubusercontent.com/TianWalkzzMiku/SRyzen-CAF/caf/build.sh
-            bash build.sh a26x newcam clang
-            bash build.sh a26x oldcam clang
-            bash build.sh a26x tencam clang
             bash build.sh lavender newcam clang
             bash build.sh lavender oldcam clang
             bash build.sh tulip newcam clang
