@@ -7,9 +7,7 @@
 KERNEL_DIR=$PWD
 
 # Device name
-if [[ "$*" =~ "a26x" ]]; then
-    DEVICE="a26x"
-elif [[ "$*" =~ "lavender" ]]; then
+if [[ "$*" =~ "lavender" ]]; then
     DEVICE="lavender"
 elif [[ "$*" =~ "tulip" ]]; then
     DEVICE="tulip"
