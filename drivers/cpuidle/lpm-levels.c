@@ -366,9 +366,7 @@ static void clusttimer_cancel(void)
 	struct lpm_cluster *cluster = per_cpu(cpu_cluster, cpu);
 
 	hrtimer_try_to_cancel(&cluster->histtimer);
-
-	if (cluster->parent)
-		hrtimer_try_to_cancel(&cluster->parent->histtimer);
+	hrtimer_try_to_cancel(&cluster->parent->histtimer);
 }
 
 static enum hrtimer_restart clusttimer_fn(struct hrtimer *h)
