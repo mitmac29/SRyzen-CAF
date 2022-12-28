@@ -3567,20 +3567,16 @@ static void __sched notrace __schedule(bool preempt)
 		update_rq_clock(rq);
 
 	next = pick_next_task(rq, prev);
+	wallclock = sched_ktime_clock();
+	update_task_ravg(prev, rq, PUT_PREV_TASK, wallclock, 0);
+	update_task_ravg(next, rq, PICK_NEXT_TASK, wallclock, 0);
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
 	rq->clock_skip_update = 0;
 
 	BUG_ON(task_cpu(next) != cpu_of(rq));
 
-	wallclock = sched_ktime_clock();
 	if (likely(prev != next)) {
-		update_task_ravg(prev, rq, PUT_PREV_TASK, wallclock, 0);
-		update_task_ravg(next, rq, PICK_NEXT_TASK, wallclock, 0);
-		cpufreq_update_util(rq, 0);
-		if (!is_idle_task(prev) && !prev->on_rq)
-			update_avg_burst(prev);
-
 		rq->nr_switches++;
 		rq->curr = next;
 		++*switch_count;
@@ -3591,8 +3587,6 @@ static void __sched notrace __schedule(bool preempt)
 		rq = context_switch(rq, prev, next); /* unlocks the rq */
 		cpu = cpu_of(rq);
 	} else {
-		update_task_ravg(prev, rq, TASK_UPDATE, wallclock, 0);
-		cpufreq_update_util(rq, 0);
 		lockdep_unpin_lock(&rq->lock);
 		raw_spin_unlock_irq(&rq->lock);
 	}

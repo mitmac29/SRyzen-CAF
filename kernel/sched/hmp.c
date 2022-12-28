@@ -2857,10 +2857,7 @@ update_task_burst(struct task_struct *p, struct rq *rq, int event, u64 runtime)
 void update_task_ravg(struct task_struct *p, struct rq *rq, int event,
 						u64 wallclock, u64 irqtime)
 {
-	u64 runtime;
-
-	if (!rq->window_start || sched_disable_window_stats ||
-	    p->ravg.mark_start == wallclock)
+	if (!rq->window_start || sched_disable_window_stats)
 		return;
 
 	lockdep_assert_held(&rq->lock);
