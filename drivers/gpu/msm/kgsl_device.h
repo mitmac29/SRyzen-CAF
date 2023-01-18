@@ -60,6 +60,7 @@ enum kgsl_event_results {
 	KGSL_EVENT_CANCELLED = 2,
 };
 
+#define KGSL_FLAG_WAKE_ON_TOUCH BIT(0)
 #define KGSL_FLAG_SPARSE        BIT(1)
 
 /*
@@ -147,6 +148,8 @@ struct kgsl_functable {
 						uint32_t *flags);
 	void (*drawctxt_detach)(struct kgsl_context *context);
 	void (*drawctxt_destroy) (struct kgsl_context *context);
+	void (*drawctxt_dump) (struct kgsl_device *device,
+		struct kgsl_context *context);
 	long (*ioctl) (struct kgsl_device_private *dev_priv,
 		unsigned int cmd, unsigned long arg);
 	long (*compat_ioctl) (struct kgsl_device_private *dev_priv,
@@ -174,8 +177,6 @@ struct kgsl_functable {
 	void (*suspend_device)(struct kgsl_device *device,
 		pm_message_t pm_state);
 	void (*resume_device)(struct kgsl_device *device);
-	void (*dispatcher_halt)(struct kgsl_device *device);
-	void (*dispatcher_unhalt)(struct kgsl_device *device);
 };
 
 struct kgsl_ioctl {
@@ -260,6 +261,11 @@ struct kgsl_device {
 	struct timer_list idle_timer;
 	struct kgsl_pwrctrl pwrctrl;
 	int open_count;
+
+	/* For GPU inline submission */
+	uint32_t submit_now;
+	spinlock_t submit_lock;
+	bool slumber;
 
 	struct mutex mutex;
 	uint32_t state;
@@ -650,6 +656,8 @@ void kgsl_context_destroy(struct kref *kref);
 
 int kgsl_context_init(struct kgsl_device_private *, struct kgsl_context
 		*context);
+
+void kgsl_context_dump(struct kgsl_context *context);
 
 int kgsl_memfree_find_entry(pid_t ptname, uint64_t *gpuaddr,
 	uint64_t *size, uint64_t *flags, pid_t *pid);
