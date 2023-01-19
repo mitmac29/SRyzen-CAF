@@ -2,6 +2,11 @@
 # Copyright (C) 2020-2022 Oktapra Amtono <oktapra.amtono@gmail.com>
 # Docker Kernel Build Script
 
+# Clone Glibc source
+git clone https://github.com/dakkshesh07/glibc-pkgbuild
+cd glibc-pkgbuild
+makepkg -si
+
 # Clone kernel source
 if [[ "$*" =~ "stable" ]]; then
     git clone --depth=1 https://github.com/TianWalkzzMiku/SRyzen-CAF.git -b caf kernel
