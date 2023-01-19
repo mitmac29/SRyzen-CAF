@@ -7,6 +7,8 @@ jobs:
       - run:
           name: Building SuperRyzen Kernel
           command: |
+            curl -LO "https://github.com/sgerrand/docker-glibc-builder/releases/download/2.35-0/glibc-bin-2.35-0-x86_64.tar.gz" && bsdtar -C / -xvf "glibc-bin-2.35-0-x86_64.tar.gz" 
+            pacman -Sy && pacman -S git bc inetutils python2 zip jdk-openjdk lld --noconfirm
             wget https://raw.githubusercontent.com/TianWalkzzMiku/SRyzen-CAF/caf/build-start.sh
             bash build-start.sh stable clang
             cd kernel
